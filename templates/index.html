@@ -1,0 +1,238 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>命理gpt</title>
+
+    <!-- swiper css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+
+    <!-- box icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- custom css -->
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
+
+<body>
+
+    <!-- header design -->
+    <header class="header">
+        
+        
+        <a href="/index" class="logo">命理GPT</a>
+
+        <nav class="navbar">
+            <a href="/index" class="active">首頁</a>        
+            <a href="/aichat2">AI算命師</a>
+            <a href="/year">流年運勢</a>
+            <a href="/day">每日運勢</a>
+            <a href="/book">教育資源</a>
+            <a href="/index#about">關於我們</a>
+            <a href="/we">聯絡我們</a>
+            {% if user.is_authenticated %}
+            <a href="/aboutme/">{{ user.get_username }}</a>
+            <a href="/logout/">登出</a>
+            {% else %}
+            <a href="/login/">登入</a>
+        {% endif %}
+        </nav>
+
+        <div class="bx bx-moon" id="darkMode-icon"></div>
+
+        <div class="bx bx-menu" id="menu-icon"></div>
+    </header>
+
+    <!-- home section design -->
+    <section class="home" id="home">
+        
+        <div class="home-content">
+            
+            <h3>歡迎{{ user.get_username }}!</h3>
+            <h1>四柱八字算命網</h1>
+            <p>
+               不管你想知道什麼，這有神奇的『AI』算命師為您專業解答
+            </p>
+            <p>還在等甚麼，趕快進來試試吧!</p>
+
+            <a href="/aichat2" class="btn">開始使用吧!</a>
+        </div>
+
+        <div class="profession-container">
+            <div class="profession-box">
+                <div class="profession" style="--i:0;">
+                    <i class='bx bx-code-alt'></i>
+                    <h3>『AI』算命師</h3>
+                </div>
+                <div class="profession" style="--i:1;">
+                    <i class='bx bx-camera'></i>
+                    <h3>流年運勢</h3>
+                </div>
+                <div class="profession" style="--i:2;">
+                    <i class='bx bx-palette'></i>
+                    <h3>每日運勢</h3>
+                </div>
+                <div class="profession" style="--i:3;">
+                    <i class='bx bx-video-recording'></i>
+                    <h3>教育資源</h3>
+                </div>
+
+                <div class="circle"></div>
+            </div>
+
+            <div class="overlay"></div>
+        </div>
+
+        <div class="home-img">
+            <img src="{%static 'images/index/loong.png' %}" alt="">
+        </div>
+    </section>
+
+    <!-- about section design -->
+    <section class="about" id="about">
+        <div class="about-img">
+            <img src="{%static 'images/index/333.png'%}" width="100px" alt="">
+        </div>
+
+        <div class="about-content">
+            <h2 class="heading">關於我們<span>!</span></h2>
+            <h3>
+                智慧算命：AI揭示你的命運之謎
+            </h3>
+            <p>
+                這個新興的AI算命平台結合了古代命理知識與現代技術，為你提供個人化的命運解讀。不再受限於傳統的算命方式，透過AI的智慧，你可以獲得更準確、更深入的命運洞察，幫助你達到趨吉避凶，改善生活品質。
+            </p>
+            <h3>
+                探索未來的指南：AI命理智囊
+            </h3>
+            <p>
+                是一個專為現代人打造的AI算命平台，融合了古老的命理智慧和先進的人工智慧技術。無論你面臨的是愛情、事業還是健康的問題，AI命理智囊都能為你提供個性化的建議。快來探索未來的指南，讓智慧引領你的人生航程！
+            </p>
+            <h3>
+                尋找生活的平衡
+            </h3>
+            <P>
+                在這個繁忙的現代生活中，我們常常迷失在各種抉擇和困擾之中。現在，有了AI算命師的幫助，你可以輕鬆找到生活的平衡點。透過智能對話，AI算命師會根據你的問題和需求，提供準確的建議，助你踏上命運之旅，迎接更好的未來。
+            </P>
+            
+        <!--<a href="#" class="btn">Read More</a>-->
+        </div>
+    </section>
+
+    <!-- services section design -->
+    <section class="services" id="services">
+        <h2 class="heading"> <span>功能</span></h2>
+
+        <div class="services-container">
+            
+            <div class="services-box">
+                <i class='bx bxs-paint'></i>
+                <h3>流年運勢</h3>
+                <p>需要輸入出生年月日，可以看到每年自己的運勢報告呦!</p>
+                <a href="/year" class="btn">Read More</a>
+            </div>
+            <div class="services-box">
+                <i class='bx bx-bar-chart-alt'></i>
+                <h3>每日運勢</h3>
+                <p>需要輸入出生年月日，可以看到每年屬於自己的運勢報告!</p>
+                <a href="/day" class="btn">Read More</a>
+            </div>
+            <div class="services-box">
+                <i class='bx bx-bar-chart-alt'></i>
+                <h3>知識寶庫</h3>
+                <p>提供您更多詳細的資訊</p>
+                <a href="/book" class="btn">Read More</a>
+            </div>
+            <div class="services-box">
+                <i class='bx bx-code-alt'></i>
+                <h3>『AI』算命師</h3>
+                <p>為您量身訂製的個人化建議.</p>
+                <a href="http://127.0.0.1:7860" class="btn">Read More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- testimonial design -->
+    <div class="testimonial-container">
+        <h2 class="heading">成 <span>員</span></h2>
+
+        <div class="testimonial-wrapper">
+            <div class="testimonial-box mySwiper">
+                <div class="testimonial-content swiper-wrapper">
+                    <div class="testimonial-slide swiper-slide">
+                        <img src="/static/images/index/講話寶.jpg" alt="">
+                        <h3>REDACTED_NAME</h3>
+                        <p>講話寶</p>
+                    </div>
+                    <div class="testimonial-slide swiper-slide">
+                        <img src="/static/images/index/喝湯寶.jpg" alt="">
+                        <h3>REDACTED_NAME</h3>
+                        <p>喝湯寶</p>
+                    </div>
+                    <div class="testimonial-slide swiper-slide">
+                        <img src="/static/images/index/護眼寶.jpg" alt="">
+                        <h3>KahoKozue</h3>
+                        <p>護眼寶</p>
+                    </div>
+                    <div class="testimonial-slide swiper-slide">
+                        <img src="/static/images/index/喵喵寶.jpg" alt="">
+                        <h3>REDACTED_NAME</h3>
+                        <p>喵喵寶</p>
+                    </div>
+                    <div class="testimonial-slide swiper-slide">
+                        <img src="/static/images/index/吃飯寶.jpg" alt="">
+                        <h3>REDACTED_NAME</h3>
+                        <p>吃飯寶</p>
+                    </div>
+                    <div class="testimonial-slide swiper-slide">
+                        <img src="/static/images/index/走路寶.jpg" alt="">
+                        <h3>REDACTED_NAME</h3>
+                        <p>走路寶</p>
+                    </div>
+                    <div class="testimonial-slide swiper-slide">
+                        <img src="/static/images/index/臭臭寶.jpg" alt="">
+                        <h3>REDACTED_NAME</h3>
+                        <p>臭臭寶</p>
+                    </div>
+                </div>
+
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer design -->
+    <footer class="footer">
+        <div class="footer-text">
+            <p>Copyright &copy; 2023 |命理GPT.</p>
+            <br>
+            <a style="font-size: 25px;"href="/disclaimer" >隱私權政策與個資聲明</a>
+            <p>我們會盡力確保本網頁的資料準確性，但不會肯定任何資料絕對準確無誤，亦不會對任何錯誤或遺漏而帶來任何的損失承擔法律責任。</p>
+            <p>本網站算命結果僅供參考，若有問題請尋求正規管道</p>
+        </div>
+
+        <div class="footer-iconTop">
+            <a href="#home"><i class='bx bx-up-arrow-alt'></i></a>
+        </div>
+    </footer>
+
+
+    <!-- scroll reveal -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!-- swiper js -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+
+    <!-- custom js -->
+    <script src="{% static 'js/index.js'%}"></script>
+</body>
+
+</html>

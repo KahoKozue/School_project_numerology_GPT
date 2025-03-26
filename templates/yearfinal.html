@@ -1,0 +1,776 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <title>結果</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" charset="UTF-8"></script>
+    <link rel="stylesheet" href="{% static 'css/yearfinal.css' %}">
+
+   <!-- swiper css -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+
+   <!-- box icons -->
+   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+
+
+
+
+<style>
+    p {
+        font-size: 15px;
+    }
+    
+    .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem 7%;
+    background:rgb(247, 206, 141) ;
+    display: flex;
+    align-items: center;
+    z-index: 100;
+    transition: .5s;
+}
+
+.header.sticky {
+    background: var(--bg-color);
+    box-shadow: 0 .1rem 1rem var(--shadow-color);
+}
+
+.logo {
+    font-size: 2.5rem;
+    color: rgb(184, 143, 79);
+    font-weight: 600;
+    margin-right: auto;
+}
+
+.navbar a {
+    position: relative;
+    font-size: 1.7rem;
+    color: var(--white-color);
+    font-weight: 500;
+    margin-right: 3.5rem;
+}
+
+.header.sticky .navbar a {
+    color: var(--text-color);
+}
+
+.header.sticky .navbar a.act {
+    color: var(--main-color);
+}
+
+.navbar a.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: .2rem;
+    background: var(--white-color);
+}
+
+.header.sticky .navbar a::before {
+    background: var(--main-color);
+    opacity: .7;
+}
+
+
+#menu-icon {
+    font-size: 3.6rem;
+    color: var(--text-color);
+    display: none;
+}
+
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>命理gpt</title>
+
+    <!-- swiper css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+
+    <!-- box icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- custom css -->
+    <link rel="stylesheet" href="{% static 'css/ii.css' %}">
+</head>
+
+<body onload="init()">
+    <!-- header design -->
+<header class="header">
+    <a href="/index" class="logo">命理GPT</a>
+
+    <nav class="navbar">
+        <a href="/index" class="act">首頁</a>        
+        <a href="/aichat2">AI算命師</a>
+        <a href="/year">流年運勢</a>
+        <a href="/day">每日運勢</a>
+        <a href="/book">教育資源</a>
+        <a href="/index#about">關於我們</a>
+        <a href="/we">聯絡我們</a>
+            {% if user.is_authenticated %}
+            <a href="/aboutme/"> {{ user.get_username }}</a>
+            <a href="/logout/">登出</a>
+            {% else %}
+            <a href="/login/">登入</a>
+        {% endif %}
+    </nav>
+
+    
+
+    <div class="bx bx-menu" id="menu-icon"></div>
+</header>
+
+
+
+<div class="container">  
+    
+    <div class="card-content">
+        <marquee direction="right" height="50" scrollamount="5" behavior="alternate">
+            <span style="color: red; font-size: 35px;">算命結果僅供參考，若有問題請尋求正規管道</span>
+        </marquee>
+         <!---1月-->
+        <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/4.png"></div>
+        <div class="card-info">
+            <h3>健康運勢</h3>
+            <P id="outputH1">{{health}}</P>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/2.png"></div>
+        <div class="card-info">
+            <h3>財運運勢</h3>
+            <P id="outputM1">{{wealth}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/1.png"></div>
+        <div class="card-info">
+            <h3>愛情運勢</h3>
+            <P id="outputL1">{{love}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/3.png"></div>
+        <div class="card-info">
+            <h3>工作運勢</h3>
+            <P id="outputW1">{{work}}</P>
+        </div>
+    </div>
+   
+<!---2月-->
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/4.png"></div>
+        <div class="card-info">
+            <h3>健康運勢</h3>
+            <P id="outputH2">{{health2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/2.png"></div>
+        <div class="card-info">
+            <h3>財運運勢</h3>
+            <P id="outputM2">{{wealth2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/1.png"></div>
+        <div class="card-info">
+            <h3>愛情運勢</h3>
+            <P id="outputL2">{{love2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/3.png"></div>
+        <div class="card-info">
+            <h3>工作運勢</h3>
+            <P id="outputW2">{{work2}}</P>
+        </div>
+    </div>
+    
+<!---3月-->
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/4.png"></div>
+        <div class="card-info">
+            <h3>健康運勢</h3>
+            <P id="outputH3">{{health2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/2.png"></div>
+        <div class="card-info">
+            <h3>財運運勢</h3>
+            <P id="outputM3">{{wealth2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/1.png"></div>
+        <div class="card-info">
+            <h3>愛情運勢</h3>
+            <P id="outputL3">{{love2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/3.png"></div>
+        <div class="card-info">
+            <h3>工作運勢</h3>
+            <P id="outputW3">{{work2}}</P>
+        </div>
+    </div>
+   
+<!---4月-->
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/4.png"></div>
+        <div class="card-info">
+            <h3>健康運勢</h3>
+            <P id="outputH4">{{health2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/2.png"></div>
+        <div class="card-info">
+            <h3>財運運勢</h3>
+            <P id="outputM4">{{wealth2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/1.png"></div>
+        <div class="card-info">
+            <h3>愛情運勢</h3>
+            <P id="outputL4">{{love2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/3.png"></div>
+        <div class="card-info">
+            <h3>工作運勢</h3>
+            <P id="outputW4">{{work2}}</P>
+        </div>
+    </div>
+    
+<!---5月-->
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/4.png"></div>
+        <div class="card-info">
+            <h3>健康運勢</h3>
+            <P id="outputH5">{{health2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/2.png"></div>
+        <div class="card-info">
+            <h3>財運運勢</h3>
+            <P id="outputM5">{{wealth2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/1.png"></div>
+        <div class="card-info">
+            <h3>愛情運勢</h3>
+            <P id="outputL5">{{love2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/3.png"></div>
+        <div class="card-info">
+            <h3>工作運勢</h3>
+            <P id="outputW5">{{work2}}</P>
+        </div>
+    </div>
+    
+
+<!---6月-->
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/4.png"></div>
+        <div class="card-info">
+            <h3>健康運勢</h3>
+            <P id="outputH6">{{health2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/2.png"></div>
+        <div class="card-info">
+            <h3>財運運勢</h3>
+            <P id="outputM6">{{wealth2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/1.png"></div>
+        <div class="card-info">
+            <h3>愛情運勢</h3>
+            <P id="outputL6">{{love2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/3.png"></div>
+        <div class="card-info">
+            <h3>工作運勢</h3>
+            <P id="outputW6">{{work2}}</P>
+        </div>
+    </div>
+    
+<!---7月-->
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/4.png"></div>
+        <div class="card-info">
+            <h3>健康運勢</h3>
+            <P id="outputH7">{{health2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/2.png"></div>
+        <div class="card-info">
+            <h3>財運運勢</h3>
+            <P id="outputM7">{{wealth2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/1.png"></div>
+        <div class="card-info">
+            <h3>愛情運勢</h3>
+            <P id="outputL7">{{love2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/3.png"></div>
+        <div class="card-info">
+            <h3>工作運勢</h3>
+            <P id="outputW7">{{work2}}</P>
+        </div>
+    </div>
+   
+<!---8月-->
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/4.png"></div>
+        <div class="card-info">
+            <h3>健康運勢</h3>
+            <P id="outputH8">{{health2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/2.png"></div>
+        <div class="card-info">
+            <h3>財運運勢</h3>
+            <P id="outputM8">{{wealth2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/1.png"></div>
+        <div class="card-info">
+            <h3>愛情運勢</h3>
+            <P id="outputL8">{{love2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/3.png"></div>
+        <div class="card-info">
+            <h3>工作運勢</h3>
+            <P id="outputW8">{{work2}}</P>
+        </div>
+    </div>
+    
+<!---9月-->
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/4.png"></div>
+        <div class="card-info">
+            <h3>健康運勢</h3>
+            <P id="outputH9">{{health2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/2.png"></div>
+        <div class="card-info">
+            <h3>財運運勢</h3>
+            <P id="outputM9">{{wealth2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/1.png"></div>
+        <div class="card-info">
+            <h3>愛情運勢</h3>
+            <P id="outputL9">{{love2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/3.png"></div>
+        <div class="card-info">
+            <h3>工作運勢</h3>
+            <P id="outputW9">{{work2}}</P>
+        </div>
+    </div>
+    
+<!---10月-->
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/4.png"></div>
+        <div class="card-info">
+            <h3>健康運勢</h3>
+            <P id="outputH10">{{health2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/2.png"></div>
+        <div class="card-info">
+            <h3>財運運勢</h3>
+            <P id="outputM10">{{wealth2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/1.png"></div>
+        <div class="card-info">
+            <h3>愛情運勢</h3>
+            <P id="outputL10">{{love2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/3.png"></div>
+        <div class="card-info">
+            <h3>工作運勢</h3>
+            <P id="outputW10">{{work2}}</P>
+        </div>
+    </div>
+    
+<!---11月-->
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/4.png"></div>
+        <div class="card-info">
+            <h3>健康運勢</h3>
+            <P id="outputH11">{{health2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/2.png"></div>
+        <div class="card-info">
+            <h3>財運運勢</h3>
+            <P id="outputM11">{{wealth2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/1.png"></div>
+        <div class="card-info">
+            <h3>愛情運勢</h3>
+            <P id="outputL11">{{love2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/3.png"></div>
+        <div class="card-info">
+            <h3>工作運勢</h3>
+            <P id="outputW11">{{work2}}</P>
+        </div>
+    </div>
+    
+
+<!---12月-->
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/4.png"></div>
+        <div class="card-info">
+            <h3>健康運勢</h3>
+            <P id="outputH12">{{health2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/2.png"></div>
+        <div class="card-info">
+            <h3>財運運勢</h3>
+            <P id="outputM12">{{wealth2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/1.png"></div>
+        <div class="card-info">
+            <h3>愛情運勢</h3>
+            <P id="outputL12">{{love2}}</P>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-images"> <img src="/static/images/yearfinal/3.png"></div>
+        <div class="card-info">
+            <h3>工作運勢</h3>
+            <P id="outputW12">{{work2}}</P>
+        </div>
+    </div>
+   
+
+
+
+</div>
+ <!--頁數-->
+<div class="pagination">
+    <li class="page-item previous-page disable"><a class="page-link" href="#">上一頁</a></li>
+    <li class="page-item current-page active"><a class="page-link" href="#">1</a></li>
+    <li class="page-item dots"><a class="page-link" href="#">......</a></li>
+    <li class="page-item current-page"><a class="page-link" href="#">5</a></li>
+    <li class="page-item current-page"><a class="page-link" href="#">6</a></li>
+    <li class="page-item dots"><a class="page-link" href="#">......</a></li>
+    <li class="page-item current-page"><a class="page-link" href="#">10</a></li>
+    <li class="page-item current-page"><a class="page-link" href="#">11</a></li>
+    <li class="page-item current-page"><a class="page-link" href="#">12</a></li>
+    <li class="page-item next-page"><a class="page-link" href="#">下一頁</a></li>
+</div>
+
+</div>
+<script>
+    // 定义一个函数来处理每个流
+    function fetchAndDisplay(url, outputElementIds) {
+        fetch(url)
+        .then(response => {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            const outputElements = outputElementIds.map(id => document.getElementById(id));
+            let currentIndex = 0; // 目前的變數索引
+    
+            let buffer = ''; // 存儲未處理的資料塊
+    
+            function processChunk(chunk) {
+                buffer += decoder.decode(chunk, { stream: true }); // 解碼並加入緩衝區
+    
+                let parts = buffer.split('@'); // 使用分號分割緩衝區中的資料
+                buffer = parts.pop(); // 最後一個部分可能不完整，將其保存到緩衝區中
+    
+                // 將每個部分流式輸出到對應的元素中
+                parts.forEach((part, index) => {
+                    if (index < outputElements.length) {
+                        outputElements[currentIndex].innerText += part.trim() ; // 在元素中顯示部分資料
+                        currentIndex++; // 切換到下一個變數
+                    }
+                });
+            }
+    
+            function readChunk() {
+                reader.read().then(({ done, value }) => {
+                    if (done) {
+                        // 當所有資料讀取完畢時，處理最後一個部分並結束
+                        processChunk(value); // 處理最後一個部分
+                        return;
+                    }
+                    processChunk(value); // 處理當前資料塊
+                    readChunk(); // 繼續讀取下一個資料塊
+                });
+            }
+    
+            readChunk(); // 開始讀取資料
+    
+        })
+        .catch(error => console.error('Error:', error));}
+    var myVariable = "{{ user_data }}";
+    console.log("接收到的變數:", myVariable);
+    // 分别调用函数来处理每个流
+    fetchAndDisplay('/year12/?m=1&user_data={{ user_data }}',['outputH1', 'outputM1', 'outputL1', 'outputW1']);
+    fetchAndDisplay('/year12/?m=2&user_data={{ user_data }}',['outputH2', 'outputM2', 'outputL2', 'outputW2']);
+    fetchAndDisplay('/year12/?m=3&user_data={{ user_data }}',['outputH3', 'outputM3', 'outputL3', 'outputW3']);
+    fetchAndDisplay('/year12/?m=4&user_data={{ user_data }}',['outputH4', 'outputM4', 'outputL4', 'outputW4']);
+    fetchAndDisplay('/year12/?m=5&user_data={{ user_data }}',['outputH5', 'outputM5', 'outputL5', 'outputW5']);
+    fetchAndDisplay('/year12/?m=6&user_data={{ user_data }}',['outputH6', 'outputM6', 'outputL6', 'outputW6']);
+    fetchAndDisplay('/year12/?m=7&user_data={{ user_data }}',['outputH7', 'outputM7', 'outputL7', 'outputW7']);
+    fetchAndDisplay('/year12/?m=8&user_data={{ user_data }}',['outputH8', 'outputM8', 'outputL8', 'outputW8']);
+    fetchAndDisplay('/year12/?m=9&user_data={{ user_data }}',['outputH9', 'outputM9', 'outputL9', 'outputW9']);
+    fetchAndDisplay('/year12/?m=10&user_data={{ user_data }}',['outputH10', 'outputM10', 'outputL10', 'outputW10']);
+    fetchAndDisplay('/year12/?m=11&user_data={{ user_data }}',['outputH11', 'outputM11', 'outputL11', 'outputW11']);
+    fetchAndDisplay('/year12/?m=12&user_data={{ user_data }}',['outputH12', 'outputM12', 'outputL12', 'outputW12']);
+
+
+
+</script>
+
+<script type="text/javascript">
+    function getPageList(totalPages, Page, maxLength) {
+        function range(start, end){
+            return Array.from(Array(end - start + 1), (_, i) => i + start);
+        }
+     
+        var sideWidth = maxLength < 9 ? 1 : 2;
+        var leftWidth = (maxLength - sideWidth * 2 - 3) >> 1;
+        var rightWidth = (maxLength - sideWidth * 2 - 3) >> 1;
+    
+        if(totalPages <= maxLength){
+            return range(1, totalPages);
+        }
+    
+        if(Page <= maxLength - sideWidth - 1 - rightWidth){
+            return range(1, maxLength - sideWidth - 1).concat(0, range(totalPages - sideWidth + 1, totalPages));
+        }
+    
+        if(Page >= totalPages - sideWidth - 1 - rightWidth){
+            return range(1, sideWidth).concat(0, range(totalPages - sideWidth - 1 - rightWidth - leftWidth));
+        }
+    
+        return range(1, sideWidth).concat(0, range(Page - leftWidth, Page + rightWidth), 0, range(totalPages - sideWidth + 1, totalPages));
+    }
+    
+    $(function(){
+        var numberOfItems = $(".card-content .card").length;
+        var limitPage = 4; // How many cards to show per page
+        var totalPages = Math.ceil(numberOfItems / limitPage);
+        var paginationSize = 12;
+        var currentPage;
+    
+        function showPage(whichPage){
+            if(whichPage < 1 || whichPage > totalPages) return false;
+    
+            currentPage = whichPage;
+            $(".card-content .card").hide().slice((currentPage - 1) * limitPage, currentPage * limitPage).show();
+    
+            $(".pagination li").slice(1, -1).remove();
+            getPageList(totalPages, currentPage, paginationSize).forEach(item => {
+                $("<li>").addClass("page-item").addClass(item ? "current-page" : "dots")
+                .toggleClass("active", item === currentPage)
+                .append($("<a>").addClass("page-link").attr({href: "javascript:void(0)"}).text(item || "..."))
+                .insertBefore(".next-page");
+            });
+    
+            $(".previous-page").toggleClass("disable", currentPage === 1);
+            $(".next-page").toggleClass("disable", currentPage === totalPages);
+            return true;
+        }
+    
+        $(".pagination").append(
+            $("<li>").addClass("page-item").addClass("previous-page").append($("<a>").addClass("page-link").attr({href:"javascript:void(0)"}).text("上一頁")),
+            $("<li>").addClass("page-item").addClass("next-page").append($("<a>").addClass("page-link").attr({href:"javascript:void(0)"}).text("下一頁"))
+        );
+    
+        $(".card-content").show();
+        showPage(1);
+
+        $(document).on("click" ,".pagination li.current-page:not(.active)", function(){
+            return showPage(+$(this).text());
+        });
+
+        $(".next-page").on("click", function(){
+            showPage(currentPage + 1);
+            // Scroll to the top of the page
+            window.scrollTo(0, 0);
+        });
+
+        $(".previous-page").on("click", function(){
+            return showPage(currentPage - 1);
+        });
+
+/*========== menu icon navbar ==========*/
+let menuIcon = document.querySelector('#menu-icon');
+let navbar = document.querySelector('.navbar');
+
+menuIcon.onclick = () => {
+    menuIcon.classList.toggle('bx-x');
+    navbar.classList.toggle('active');
+};
+
+
+/*========== scroll sections active link ==========*/
+let sections = document.querySelectorAll('section');
+let navLinks = document.querySelectorAll('header nav a');
+
+window.onscroll = () => {
+    sections.forEach(sec => {
+        let top = window.scrollY;
+        let offset = sec.offsetTop - 150;
+        let height = sec.offsetHeight;
+        let id = sec.getAttribute('id');
+
+        if(top >= offset && top < offset + height) {
+            navLinks.forEach(links => {
+                links.classList.remove('active');
+                document.querySelector('header nav a[href*=' + id + ']').classList.add('active');
+            });
+        };
+    });
+
+
+/*========== sticky navbar ==========*/
+let header = document.querySelector('.header');
+
+header.classList.toggle('sticky', window.scrollY > 100);
+
+
+/*========== remove menu icon navbar when click navbar link (scroll) ==========*/
+menuIcon.classList.remove('bx-x');
+navbar.classList.remove('active');
+
+};
+
+
+/*========== swiper ==========*/
+var swiper = new Swiper(".mySwiper", {
+    slidesPerView: 1,
+    spaceBetween: 50,
+    loop: true,
+    grabCursor: true,
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+});
+
+
+/*========== dark light mode ==========*/
+let darkModeIcon = document.querySelector('#darkMode-icon');
+
+darkModeIcon.onclick = () => {
+    darkModeIcon.classList.toggle('bx-sun');
+    document.body.classList.toggle('dark-mode');
+};
+
+
+/*========== scroll reveal ==========*/
+ScrollReveal({
+    // reset: true,
+    distance: '80px',
+    duration: 2000,
+    delay: 200
+});
+
+ScrollReveal().reveal('.home-content, .heading', { origin: 'top' });
+ScrollReveal().reveal('.home-img img, .services-container, .portfolio-box, .testimonial-wrapper, .contact form', { origin: 'bottom' });
+ScrollReveal().reveal('.home-content h1, .about-img img', { origin: 'left' });
+ScrollReveal().reveal('.home-content h3, .home-content p, .about-content', { origin: 'right' });
+
+/*=============== SHOW HIDDEN - PASSWORD ===============*/
+const showHiddenPass = (loginPass, loginEye) =>{
+    const input = document.getElementById(loginPass),
+          iconEye = document.getElementById(loginEye)
+ 
+    iconEye.addEventListener('click', () =>{
+       // Change password to text
+       if(input.type === 'password'){
+          // Switch to text
+          input.type = 'text'
+ 
+          // Icon change
+          iconEye.classList.add('ri-eye-line')
+          iconEye.classList.remove('ri-eye-off-line')
+       } else{
+          // Change to password
+          input.type = 'password'
+ 
+          // Icon change
+          iconEye.classList.remove('ri-eye-line')
+          iconEye.classList.add('ri-eye-off-line')
+       }
+    })
+ }
+ 
+ showHiddenPass('login-pass','login-eye')
+
+
+  
+
+
+    });
+</script>
+
+
+</body>
+</html>

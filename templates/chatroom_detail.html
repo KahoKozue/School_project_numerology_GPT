@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ chatroom.name }}</title>
+</head>
+<body>
+    <h1>{{ chatroom.name }}</h1>
+    <div id="conversation">
+        {% for conversation in conversations %}
+        <p><strong>{{ conversation.user }}</strong>: {{ conversation.user_question }}</p>
+        <p><strong>AI</strong>: {{ conversation.ai_answer }}</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

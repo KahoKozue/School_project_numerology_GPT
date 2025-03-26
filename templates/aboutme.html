@@ -1,0 +1,322 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人資訊</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/aboutme.css' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.5.3/css/ionicons.min.css" integrity="sha512-BpjzXK/3XdMkVr3R6LY0JvOp1sxYrhq1mehZz7mEN8mC2VQT3tiAPyBDbQ1jySLPpzE5dtZbOSMlkZb6xZVV0w==" crossorigin="anonymous" />
+</head>
+<body>
+<header>
+    
+    <div class="user">
+        <img src="/static/images/aichat2/222.png">
+        <h3 class="name">{{ user.get_username }}</h3>
+        <p class="po">生日:{{ birthday.birthday }}</p>
+        <p class="po">出生時間:{{ birthday_time }}</p>
+        <p class="po">性別:{{ sex }}</p>
+    </div>
+    <nav class="navbar">
+        <ul>
+        <li><a href="/index" class="active"><ion-icon name="home-outline"></ion-icon>首頁</a></li>      
+        <li><a href="/aichat2"><ion-icon name="cube-outline"></ion-icon>AI算命師</a></li>
+        <li><a href="/year"> <ion-icon name="calendar-outline"></ion-icon>流年運勢</a></li>
+        <li><a href="/day"> <ion-icon name="today-outline"></ion-icon>每日運勢</a></li>
+        <li><a href="/book"><ion-icon name="book-outline"></ion-icon>教育資源</a></li>
+        <li><a href="/index/#about"> <ion-icon name="globe-outline"></ion-icon>關於我們</a></li>
+        <li><a href="/we">  <ion-icon name="call-outline"></ion-icon>聯絡我們</a></li>
+        <li>
+            {% if user.is_authenticated %}
+                <a href="/aboutme/"><ion-icon name="person-outline"></ion-icon>{{ user.get_username }}</a>
+                <a href="/logout/"><ion-icon name="log-in-outline"></ion-icon>登出</a>
+            {% else %}
+                <a href="/login/"><ion-icon name="log-in-outline"></ion-icon>登入</a>
+            {% endif %}
+        </li>
+        
+    </ul>
+    </nav>
+  
+    
+</header>
+<div id="menu" class="fas fa-bars">
+
+</div>
+
+
+<section class="home" id="home">
+    <h3>歡迎<span style="color: red;">使用者{{ user.get_username }}</span>來到</h3>
+    <h1>四柱八字算命網<span>會員中心</span></h1>
+    <p>不管你想知道麼，這有神奇的『AI』算命師為您專業解答</p>
+    <p>還在等甚麼，趕快進來試試吧!</p>
+    <a href="/index"><button class="btn">首頁<i class="fas fa-user"></i></button></a>
+    
+
+</section>
+
+<section >
+    <h1 class="heading"><span>個人資訊</span></h1>
+    {% if user.is_authenticated %}
+<div>
+    <p style="color: white; font-size: 25px;">生日: {{ birthday.birthday|date:"Y-m-d" }}</p>
+    <p style="color: white; font-size: 25px;">誕生時間: {{ birthday_time }}</p>
+    <p style="color: white; font-size: 25px;">性別: {{ sex }}</p>
+    
+
+<!-- 編輯按鈕 -->
+<button id="editBtn" style="font-size: 25px; font-weight: bold; background-color: #ff0000;">編輯生日</button>
+<br>
+<br>
+<button id="editBtn2" style="font-size: 25px; font-weight: bold; background-color: #00ff00;">編輯時間</button>
+<br>
+<br>
+<button id="editBtn3" style="font-size: 25px; font-weight: bold; background-color: #0000ff;">編輯性別</button>
+
+
+
+
+<!-- 編輯表單 -->
+<div id="editForm" style="display: none;">
+    <form method="post" action="{% url 'update_birthday' %}">
+        {% csrf_token %}
+        <!-- 編輯生日欄位 -->
+        <div>
+            <label for="birthday" style="color: white;font-size: 25px;">生日:</label>
+            <input type="date" id="birthday" name="Bth" value="{{ birthday.birthday|date:'Y-m-d' }}" required style="font-size: 25px;">
+            
+            <script>
+                // 獲取生日輸入元素
+                var birthdayInput = document.getElementById('birthday');
+            
+                // 獲取今天的日期
+                var today = new Date();
+                var yyyy = today.getFullYear();
+                var mm = String(today.getMonth() + 1).padStart(2, '0'); // 月份從 0 開始，所以要加 1
+                var dd = String(today.getDate()).padStart(2, '0');
+                var todayString = yyyy + '-' + mm + '-' + dd;
+            
+                // 設置最大日期為今天
+                birthdayInput.setAttribute('max', todayString);
+            </script>
+            
+            <style>
+              input[type="date"]::-webkit-datetime-edit {
+                font-size: 25px;
+              }
+            </style>
+            <script>
+                //禁止選到後面日子
+                const dateInput = document.getElementById('date');
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.max = today;
+            </script>
+            
+
+            
+        </div>
+        <button type="submit"style="font-size: 25px; font-weight: bold;">保存</button>
+        <button type="button" id="cancelBtn"style="font-size: 25px; font-weight: bold;">取消</button>
+    </form>
+</div>
+
+<!-- 編輯表單 -->
+<div id="editForm2" style="display: none;">
+    <form method="post" action="{% url 'update_birthday_time' %}">
+        {% csrf_token %}
+        <!-- 編輯生日欄位 -->
+        <div>
+            <label for="birthday_time" style="color: white;font-size: 25px;">誕生時間:</label>
+            <input type="time" id="birthday_time" name="Bth_tm" value="{{ birthday_time }}" required style="font-size: 25px;">
+            
+        
+        </div>
+        <button type="submit"style="font-size: 25px; font-weight: bold;">保存</button>
+        <button type="button" id="cancelBtn2"style="font-size: 25px; font-weight: bold;">取消</button>
+    </form>
+</div>
+
+
+
+<!-- 編輯表單 -->
+<div id="editForm3" style="display: none;">
+    <form method="post" action="{% url 'update_sex' %}">
+        {% csrf_token %}
+        <!-- 選擇性別欄位 -->
+        <div>
+            <label for="sex" style="color: white;font-size: 25px;">選擇性別:</label>
+            <div style="font-size: 25px;">
+            <input type="text" id="birthday_sex" name="Bth_sex" value="{{ sex }}" required style="font-size: 25px;">
+            <script>
+                function validateSexInput() {
+                    const inputField = document.getElementById('birthday_sex');
+                    const value = inputField.value.trim();
+                    if (value !== '男' && value !== '女') {
+                        alert('請輸入 "男" 或 "女"');
+                        inputField.value = ''; // 清空輸入框
+                        inputField.focus(); // 重新聚焦於輸入框
+                    }
+                }
+            
+                function validateForm() {
+                    const inputField = document.getElementById('birthday_sex');
+                    const value = inputField.value.trim();
+                    if (value !== '男' && value !== '女') {
+                        alert('請輸入 "男" 或 "女"');
+                        return false; // 阻止表單提交
+                    }
+                    return true; // 允許表單提交
+                }
+            
+                // 在页面加载完成后，给输入框添加事件监听器
+                window.onload = function() {
+                    const inputField = document.getElementById('birthday_sex');
+                    inputField.addEventListener('input', function(event) {
+                        const value = inputField.value.trim();
+                        if (value !== '男' && value !== '女') {
+                            inputField.setCustomValidity('請輸入 "男" 或 "女"'); // 设置自定义验证消息
+                        } else {
+                            inputField.setCustomValidity(''); // 清空自定义验证消息
+                        }
+                    });
+                };
+            </script>
+            
+            
+            </div>
+        </div>
+        <button type="submit" style="font-size: 25px; font-weight: bold;">保存</button>
+        <button type="button" id="cancelBtn3" style="font-size: 25px; font-weight: bold;">取消</button>
+    </form>
+</div>
+
+
+
+
+
+{% endif %}
+</section>
+<!----<section class="test" id="test">
+    <h1 class="heading"><span>測驗紀錄</span></h1>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>姓名</th>
+                        <th>生日</th>
+                        <th>時間                        </th>
+                        <th>性別</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for year in years %}
+                    <tr>
+                        <td>{{ year.name }}</td>
+                        <td>{{ year.bth }}</td>
+                        <td>{{ year.time }}</td>
+                        <td>{{ year.sex }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+</section>-->
+
+
+
+
+    
+    
+    </section>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="{% static 'js/aboutme.js' %}"></script>
+
+
+ <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        /* CSS to adjust table style */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 18px; /* Adjust font size as needed */
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 10px;
+            color: white; /* Set text color to white */
+        }
+
+        th {
+            background-color: #333; /* Set background color for table header */
+        }
+
+        tr:nth-child(even) {
+            background-color: #555; /* Set background color for even rows */
+        }
+
+        tr:nth-child(odd) {
+            background-color: #444; /* Set background color for odd rows */
+        }
+    </style>
+    <script>
+        //(更改日期))
+        const editBtn = document.getElementById('editBtn');
+        const editForm = document.getElementById('editForm');
+        const cancelBtn = document.getElementById('cancelBtn');
+    
+        editBtn.addEventListener('click', () => {
+            editForm.style.display = 'block';
+        });
+    
+        cancelBtn.addEventListener('click', () => {
+            editForm.style.display = 'none';
+        });
+
+
+
+        // 獲取編輯按鈕和編輯表單元素(出生時間)
+var editBtn2 = document.getElementById('editBtn2');
+var editForm2 = document.getElementById('editForm2');
+var cancelBtn2 = document.getElementById('cancelBtn2');
+
+// 添加編輯按鈕點擊事件處理函數
+editBtn2.addEventListener('click', function() {
+    editForm2.style.display = 'block'; // 顯示編輯表單
+});
+
+// 添加取消按鈕點擊事件處理函數
+cancelBtn2.addEventListener('click', function() {
+    editForm2.style.display = 'none'; // 隱藏編輯表單
+});
+
+
+ // 獲取編輯按鈕和編輯表單元素(性別)
+ var editBtn3 = document.getElementById('editBtn3');
+var editForm3 = document.getElementById('editForm3');
+var cancelBtn3 = document.getElementById('cancelBtn3');
+
+// 添加編輯按鈕點擊事件處理函數
+editBtn3.addEventListener('click', function() {
+    editForm3.style.display = 'block'; // 顯示編輯表單
+});
+
+// 添加取消按鈕點擊事件處理函數
+cancelBtn3.addEventListener('click', function() {
+    editForm3.style.display = 'none'; // 隱藏編輯表單
+});
+    </script>
+
+
+
+
+</body>
+</html>

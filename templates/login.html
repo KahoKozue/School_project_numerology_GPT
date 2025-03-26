@@ -1,0 +1,166 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>登入</title>
+    <!-- swiper css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+
+    <!-- box icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- custom css -->
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    
+
+</head>
+
+<body>
+    <!-- header design -->
+    <header class="header">
+        <a href="/index" class="logo">命理GPT.</a>
+
+        <nav class="navbar">
+            <a href="/index" class="active">首頁</a>        
+            <a href="/aichat2">AI算命師</a>
+            <a href="/year">流年運勢</a>
+            <a href="/day">每日運勢</a>
+            <a href="/book">教育資源</a>
+            <a href="/index/#about">關於我們</a>
+            <a href="/we">聯絡我們</a>
+            {% if user.is_authenticated %}
+            <a href="/aboutme/"> {{ user.get_username }}</a>
+            <a href="/logout/">登出</a>
+            {% else %}
+            <a href="/login/">登入</a>
+        {% endif %}
+        </nav>
+
+        <div class="bx bx-moon" id="darkMode-icon"></div>
+
+        <div class="bx bx-menu" id="menu-icon"></div>
+    </header>
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+
+     <div class="container" id="container0">
+        <div class="form-container sign-up">
+            <form method="POST" action="/login/" name="register">
+                {% csrf_token %}
+                <h1>創建新帳號</h1>
+                <span></span>
+                <input type="text" name="username" placeholder="用戶名稱" required>
+                <input type="email" name="email" placeholder="信箱" required>
+                <input type="password" name="password1" placeholder="密碼" required pattern="^(?=.*[A-Za-z])(?=.{8,}).*$" title="密碼長度至少8個字元,並且需包含至少一個字母">
+                <input type="password" name="password2" placeholder="確認密碼" required pattern="^(?=.*[A-Za-z])(?=.{8,}).*$" title="密碼長度至少8個字元,並且需包含至少一個字母">
+                <input id="date" name="date" type="date" placeholder="輸入生日" required>
+                <input id="time" name="time" type="time" placeholder="輸入出生時間" required>
+                <select name="sex">
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+                    <script>
+                        //禁止選到後面日子
+                        const dateInput = document.getElementById('date');
+                        const today = new Date().toISOString().split('T')[0];
+                        dateInput.max = today;
+                    </script>
+                    <button type="submit" name="register">註冊</button>
+                    {% if error %}
+                    <p class="error">{{ error }}</p>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="form-container sign-in">
+                <form method="POST" action="/login/" name="login">
+                    {% csrf_token %}
+                    <h1>登入</h1>
+                    <span></span>
+                    <input type="text" name="username" placeholder="username" required>  <!-- 將 name 設置為 "username" -->
+                    <input type="password" name="password" placeholder="Password" required maxlength="15">  <!-- 將 name 設置為 "password" -->
+                    <a href="{% url 'reset_password'%}">忘記密碼?</a>
+                    <button type="submit" name="login">登入</button>  <!-- 將 type 設置為 "submit"，使其成為提交按鈕 -->
+                    {% if error %}
+                    <p class="error">{{ error }}</p>
+                {% endif %}
+                </form>
+                <style>
+                    .error {
+  color: red;
+  font-weight: bold;
+}
+                </style>
+                
+            </div>
+            
+            <div class="toggle-container">
+                <div class="toggle">
+                    <div class="toggle-panel toggle-left">
+                        <h1>歡迎回來!</h1>
+                        <p>快來使用我吧!</p>
+                        <button class="hidden" id="login0">登入 required</button>
+                    </div>
+                    <div class="toggle-panel toggle-right">
+                        <h1>嗨!歡迎回來!</h1>
+                        <p>開始使用神奇的AI算命師服務吧!</p>
+                        <p>沒帳號嗎? 點擊下方按鈕創建新帳號吧!</p>
+                        <button class="hidden" id="register0">創建</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+    <!-- scroll reveal -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!-- swiper js -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+    <!-- custom js -->
+    <script>
+        /*========== menu icon navbar ==========*/
+        let menuIcon = document.querySelector('#menu-icon');
+        let navbar = document.querySelector('.navbar');
+
+        menuIcon.onclick = () => {
+            menuIcon.classList.toggle('bx-x');
+            navbar.classList.toggle('active');
+        };
+    </script>
+    <script >
+        const container = document.getElementById('container0');
+        const registerBtn = document.getElementById('register0');
+        const loginBtn = document.getElementById('login0');
+
+        registerBtn.addEventListener('click', () => {
+            container.classList.add("active");
+        });
+
+        loginBtn.addEventListener('click', () => {
+            container.classList.remove("active");
+        });
+    </script>
+    <script src="{% static 'js/login.js'%}"></script>
+</body>
+
+</html>
+
+
+
+</html>

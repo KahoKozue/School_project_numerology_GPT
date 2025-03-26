@@ -1,0 +1,502 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>命理GPT</title>
+    <link rel="stylesheet"  href="{% static 'css/aichat2.css' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.5.3/css/ionicons.min.css" integrity="sha512-BpjzXK/3XdMkVr3R6LY0JvOp1sxYrhq1mehZz7mEN8mC2VQT3tiAPyBDbQ1jySLPpzE5dtZbOSMlkZb6xZVV0w==" crossorigin="anonymous" />
+
+    <style>
+      <!--NO-->
+        .chat-container {
+          display: flex;
+          flex-direction: column;
+          height: 70%;
+          width:70%;
+
+          position: fixed;
+          top: 50%;
+          right: -620px; /* 將元素向右移動 10 像素 */
+          transform: translate(-50%, -50%);
+          width: 1300px;
+          max-width: 90%;
+          height: calc(100vh - 40px);
+          background: #fff;
+          box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.06), 0 2px 5px 0 rgba(0, 0, 0, 0.06);
+          display: flex;
+        }
+        <!--NO-->
+        .chat-box {
+          flex: 1;
+          background-color: #f4f4f4;
+          padding: 20px;
+          
+          overflow-y: auto;
+        }
+        
+        .chat-message {
+          margin-bottom: 10px;
+          padding: 10px;
+          border-radius: 5px;
+          max-width: 70%;
+        }
+       
+        .chat-message.user {
+          background-color: #dcf8c6;
+          align-self: flex-end;
+        }
+
+        .chat-message.agent {
+          background-color: #fff;
+          align-self: flex-start;
+          
+        }
+       
+        .chat-input {
+          background-color: #333;
+          padding: 10px;
+          display: flex;
+          align-items: center;
+        }
+    
+        .chat-input input {
+          flex: 1;
+          padding: 10px;
+          border: none;
+          border-radius: 5px;
+          font-size: 16px;
+        }
+        
+        .chat-input button {
+          background-color: #4CAF50;
+          color: #fff;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 5px;
+          font-size: 16px;
+          cursor: pointer;
+        }
+        .block.active {
+          background-color: #f5f5f5; /* 或者其他你想要的顏色 */
+      }
+      </style>
+      <style>
+        table {
+          border-collapse: collapse;
+          width: 100%;
+        }
+      
+        th, td {
+          border: 1px solid #dddddd;
+          text-align: center;
+          padding: 8px;
+        }
+      
+        th {
+          background-color: #f2f2f2;
+        }
+        .custom-border:hover {
+          border: 1px solid gray;
+          border-radius: 5px; /* 如果你想要邊框有圓角 */
+          background-color: #dcdcdc;
+        }
+      </style>
+      <style>
+        .marquee {
+          width: 100%;
+          overflow: hidden;
+          white-space: nowrap;
+          color: red; 
+          font-size: 35px;
+        }
+        
+        .marquee span {
+          display: inline-block;
+          padding-left: 100%;
+          animation: marquee 15s linear infinite;
+        }
+        
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-100%); }
+        }
+        pre {
+          white-space: pre-wrap;
+          word-wrap: break-word;
+      }
+        </style>
+</html>
+
+<body>
+  <!-- 導覽選單 -->
+  <div class="sidebar">
+    <!--<div class="logo"></div>-->
+    <ul class="menu">
+      <li  class="active"><a href="/index" class="active"><ion-icon name="home-outline"></ion-icon>首頁</a></li>
+      <li><a href="/year"><ion-icon name="calendar-outline"></ion-icon>流年運勢</a></li>
+      <li><a href="/aichat2"><ion-icon name="cube-outline"></ion-icon>AI算命師</a></li>
+      <li><a href="/day"><ion-icon name="today-outline"></ion-icon>每日運勢</a></li>
+      <li><a href="/book"><ion-icon name="book-outline"></ion-icon>教育資源</a></li>
+      <li><a href="/index/#about"><ion-icon name="globe-outline"></ion-icon>關於我們</a></li>
+      <li><a href="/we"><ion-icon name="call-outline"></ion-icon>聯絡我們</a></li>
+      {% if user.is_authenticated %}
+      <li><a href="/aboutme/"><ion-icon name="person-outline"></ion-icon>{{ user.get_username }}</a></li>
+      {% endif %}
+      <li class="logout">
+        {% if user.is_authenticated %}        
+        <a href="/logout/"><ion-icon name="log-in-outline"></ion-icon>登出</a>
+        {% else %}
+        <a href="/login/"><ion-icon name="log-in-outline"></ion-icon>登入</a>
+        {% endif %}
+      </li>
+    </ul>
+  </div>
+  <!-- 導覽選單完 -->
+
+  <div class="container">
+    <!-- 左側  -->
+    <div class="leftSide">
+      <!-- 左側頂部  -->
+      <div class="header">
+        <div class="userimg"><img src="{% static 'images/aichat2/123.png' %} " class="cover userimg"></div> 
+        <ul class="nav-icons" onclick="addChatRoom()">
+          <li class="custom-border"><p>新增聊天室 <ion-icon name="chatbox"></ion-icon></p></li>
+        </ul>
+      </div>
+      <!-- 左側頂部完  -->
+      <!-- 聊天列表 -->
+      <div id="chatroom-list" class="chatlist" style="width: 100%;">
+        {% for chatroom in chatrooms %}
+        <div class="block " onclick="loadChatMessages({{ chatroom.id }})">
+          <!--圖--> 
+          <div class="imgbx"><img src="/static/images/aichat2/222.png" class="cover"></div>                
+          <!-- 聊天室名稱 修刪-->
+          <div class="details">
+            <div class="listhead" style="display: flex; align-items: center;">
+              <h4 id="chatroom-name-{{ chatroom.id }}" style="width: 70%; margin-right: 10px;">{{ chatroom.name }}</h4> <!-- 添加編號的span -->
+              <div style="display: flex; flex-direction: column;">
+                <button onclick="renameChatRoom({{ chatroom.id }})">Rename</button>
+                <button onclick="deleteChatRoom({{ chatroom.id }})">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <!-- 聊天列表完 -->         
+    </div>
+    <!-- 左側完  -->
+    <!-- 右側  -->
+    <div class="rightSide">
+      <!-- 右側頂部  -->
+      <div class="header">
+        <div class="imgText">
+          <div class="userimg"><img src="{% static 'images/aichat2/222.png' %}" class="cover" style="width: 100%;"></div>              
+          <h4 style="width: 85px;"><br><span>24小時上線</span></h4>
+          <div class="marquee"><span>算命結果僅供參考，若有問題請尋求正規管道</span></div>              
+        </div>
+        <!-- 模型選擇  -->
+        <ul class="nav-icons">
+          <!--<li onclick="toggleDropdown()"><ion-icon name="ellipsis-vertical"></ion-icon></li>-->
+          <li><p>模式 </p></li>
+          <select id="mySelect" name="options">
+            <option value="1">GPT</option>
+            <option value="2">RAG_GPT</option>
+            <option value="3">小模型</option>
+          </select>
+        </ul>              
+      </div>
+      <!-- 右側頂部完  -->
+
+      <!-- 聊天室訊息 -->
+      <div class="chatBox" >
+        <!-- 預先訊息 -->
+        <div class="chat-message agent">
+          <p>歡迎{{user.username}}來到命理聊天室，我先提供您的命盤。</p>
+          <p>生日:{{ all.0 }}年 {{all.1}}月 {{all.2}}日 {{all.3}}時</p>
+          <table>
+            <tr style=font-size:20px;>
+              <td></td>
+              <td>年柱</td>
+              <td>月柱</td>
+              <td>日柱</td>
+              <td>時柱</td>
+            </tr>
+            <tr style=font-size:20px;>
+              <td>主星</td>
+              <td>{{ all.5 }}</td>
+              <td>{{ all.7 }}</td>
+              <td>本元</td>
+              <td>{{ all.10 }}</td>
+            </tr>
+            <tr style=font-size:20px;>
+              <td>天干</td>
+              <td style=font-size:25px;>{{ all.0.0 }}</td>
+              <td style=font-size:25px;>{{ all.1.0 }}</td>
+              <td style=font-size:25px;>{{ all.2.0 }}</td>
+              <td style=font-size:25px;>{{ all.3.0 }}</td>
+            </tr>
+            <tr style=font-size:20px;>
+              <td>地支</td>
+              <td style=font-size:25px;>{{ all.0.1 }}</td>
+              <td style=font-size:25px;>{{ all.1.1 }}</td>
+              <td style=font-size:25px;>{{ all.2.1 }}</td>
+              <td style=font-size:25px;>{{ all.3.1 }}</td>
+            </tr>
+            <tr style=font-size:20px;>
+              <td>副星</td>
+              <td>{{ all.6 }}</td>
+              <td>{{ all.8 }}</td>
+              <td>{{ all.9 }}</td>
+              <td>{{ all.11 }}</td>
+            </tr>
+          </table>
+          <p>請問有甚麼問題須要我提供服務?</p>
+        </div>
+        <!-- 聊天紀錄 -->
+        <div class="chatBox0" >
+          {% for message in chat_messages %}
+          <div class="chat-message user">
+            <p>{{ message.question }}</p>
+          </div>
+          <div class="chat-message agent">
+            <p>{{ message.ai_reply}}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <!-- 聊天室訊息完 -->
+      
+      <!-- 聊天室對話框 -->
+      <div class="chatbox_input">
+        <input type="text" id="chatbox_input" placeholder="Type your message..." />
+        <button id="chat-send">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const newChatroomId = "{{ selected_chatroom }}";
+      if (newChatroomId) {
+        loadChatMessages(newChatroomId);
+      }
+    });
+
+    let currentChatroomId = null;
+    var selectElement = document.getElementById("mySelect");
+    var selectedOption = "1";
+    // 添加事件監聽器，當選擇改變時執行指定函數
+    selectElement.addEventListener("change", function() {
+      // 獲取選擇的值
+      selectedOption = selectElement.value;  
+      // 判斷選擇的值
+      console.log("當前選項是：" + selectedOption);
+    });
+
+    //載入聊天室
+    function loadChatMessages(chatroomId) {       
+      // 更新當前選中的聊天室 ID
+      currentChatroomId = chatroomId;
+      // 清空右側聊天框
+      document.querySelector('.chatBox0').innerHTML = '';
+      // 向服務器發送請求,獲取該聊天室的聊天記錄
+      fetch(`/chat/messages/${chatroomId}/`)
+      .then(response => response.json())
+      .then(data => {
+        // 將聊天記錄更新到右側聊天框
+        data.forEach(message => {
+            updateChatBox(message.user_question, true);
+            updateChatBox(message.ai_answer, false);
+        });
+      })
+      .catch(error => {
+          console.error('Failed to load chat messages:', error);
+      });
+    }
+
+    // 新增聊天室
+    function addChatRoom() {       
+      fetch('/create_chatroom/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },        
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // 在左側聊天列表中動態渲染新的聊天室項目
+          const chatlist = document.querySelector('.chatlist');
+          const newChatRoom = document.createElement('div');
+          newChatRoom.classList.add('block');
+          newChatRoom.innerHTML = `
+
+            <div class="imgbx"><img src="/static/images/aichat2/222.png" class="cover"></div><!--圖-->                 
+            <div class="details"><!--圖-->
+              <div class="listhead" style="display: flex; align-items: center;">
+                <h4 id="chatroom-name-${ data.id }" style="width: 70%; margin-right: 10px;">${data.name}</h4> <!-- 添加編號的span -->
+                <div style="display: flex; flex-direction: column;">
+                  <button onclick="renameChatRoom(${ data.id })">rename</button>
+                  <button onclick="deleteChatRoom(${ data.id })">Delete</button>
+                </div>
+              </div>
+            </div>
+          `;
+          newChatRoom.addEventListener('click', () => loadChatMessages(data.id));
+          chatlist.appendChild(newChatRoom);    
+        } else {
+          console.error('Failed to create chatroom');
+        }
+      })
+      .catch(error => console.error('Failed to create chatroom:', error));
+    }
+    
+    // 重命名聊天室
+    function renameChatRoom(chatroomId) {
+      const newName = prompt('Enter new chatroom name:'); // 弹出提示框让用户输入新名称
+      if (!newName) return; // 如果用户取消输入则不进行后续操作      
+      // 更新聊天室名称
+      const chatroomNameElement = document.querySelector(`#chatroom-name-${chatroomId}`);
+      if (chatroomNameElement) {
+          chatroomNameElement.textContent = newName;
+      }
+      // 发送 AJAX 请求更新聊天室名称
+      fetch(`/rename_chatroom/${chatroomId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ newName: newName })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (!data.success) {
+          console.error('Failed to rename chatroom');
+          // 如果重命名失败，恢复为旧名称
+          if (chatroomNameElement) {
+              chatroomNameElement.textContent = '{{ chatroom.name }}';
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Failed to rename chatroom:', error);
+        // 如果出现错误，恢复为旧名称
+        if (chatroomNameElement) {
+            chatroomNameElement.textContent = '{{ chatroom.name }}';
+        }
+      });
+    }
+
+    // 刪除聊天室
+    function deleteChatRoom(chatroomId) {
+      if (confirm('你確定要刪除聊天室嗎?')) {
+          const data = { 'chatroomId': chatroomId };
+          fetch('/delete_chatroom/', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': '{{ csrf_token }}'
+              },
+              body: JSON.stringify(data)
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              // 重定向到 aichat2.html 頁面
+              window.location.href = '{% url 'aichat2' %}';
+          } else {
+              console.error('Failed to delete chatroom');
+          }
+          })
+      .catch(error => console.error('Failed to delete chatroom:', error));
+      }
+    }
+    
+    // 給發送按鈕添加點擊事件
+    document.getElementById('chat-send').addEventListener('click', sendMessage);
+
+    // 聊天消息發送函數
+    function sendMessage() {
+      // 取得輸入框的值
+      const message = document.getElementById('chatbox_input').value;
+      console.log(' 被調用了');
+      // 判斷是否為空
+      if (message.trim() !== '') {
+        // 清空輸入框
+        document.getElementById('chatbox_input').value = '';
+        
+        // 更新聊天框（用戶輸入的消息）
+        updateChatBox(message, true);
+        // 發送 GET 請求
+        fetch(`/chat/send/?message=${encodeURIComponent(message)}&chatroomId=${currentChatroomId}&modeltype=${selectedOption}`, {
+          method: 'GET',
+        })
+        .then(async response => {
+          const reader = response.body.getReader();
+          const chatBox = document.querySelector('.chatBox0');
+        
+          const processData = async () => {
+            let receivedData = '';
+            let messageDiv = null;
+        
+            while (true) {
+              const { value, done } = await reader.read();
+              if (done) break;
+        
+              // 解碼接收到的資料流
+              const decodedValue = new TextDecoder().decode(value);
+              receivedData += decodedValue;
+        
+              // 如果還沒有建立 messageDiv,則建立一個新的 div 元素
+              if (!messageDiv) {
+                messageDiv = document.createElement('div');
+                messageDiv.classList.add('chat-message', 'agent');
+                chatBox.appendChild(messageDiv);
+              }
+        
+              // 創建一個文字節點並將接收到的數據附加到 messageDiv 上
+              const messageNode = document.createTextNode(decodedValue);
+              messageDiv.appendChild(messageNode);
+        
+              // 滾動到聊天框底部
+              chatBox.scrollTop = chatBox.scrollHeight;
+            }
+          };
+        
+          processData();
+        })
+        .catch(error => console.error('Failed to send message:', error));
+      }
+    }
+  
+    // 更新聊天框函數
+    function updateChatBox(message, isUser) {
+      // 將chat-box 存入chatbox
+      const chatBox = document.querySelector('.chatBox0');
+      // 建立div元素可包聊天訊息
+      const messageDiv = document.createElement('div');
+      // 如果isuser為真-->user  反之-->agent
+      messageDiv.classList.add('chat-message', isUser ? 'user' : 'agent');
+      const messagePre = document.createElement('pre');
+
+      messageDiv.textContent = message;
+      // 顯示訊息
+      chatBox.appendChild(messageDiv);
+      // 聊天室滾到底部
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }   
+  </script>
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script src="{% static 'js/aichat2.js'%}"></script>
+
+</body>
+</html>

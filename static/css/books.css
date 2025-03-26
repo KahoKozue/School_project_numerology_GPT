@@ -1,0 +1,117 @@
+.container {
+    display: flex;
+    height: calc(100vh - 60px);
+}
+
+.sidebar {
+    background-color: rgb(247, 206, 141);
+    padding: 20px;
+    width: 200px;
+    transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+    width: 60px;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.toc-list {
+    max-height: 70%;
+    overflow-y: auto;
+}
+
+.toc-item {
+    padding: 5px 10px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.toc-item.active {
+    background-color: rgb(197, 152, 80);
+}
+
+.content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.book-content {
+    height: calc(100% - 20%);
+    background-color: #f9f9f9;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.navigation {
+    display: flex;
+    justify-content: center;
+    height: 60px;
+    background-color: rgb(247, 206, 141);
+    align-items: center;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.nav-btn i {
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+/* For tablets and smaller screens */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .sidebar {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .content {
+        padding: 10px;
+    }
+
+    .book-content {
+        height: auto;
+    }
+}
+
+/* For phones and very small screens */
+@media (max-width: 480px) {
+    .navigation {
+        flex-wrap: wrap;
+    }
+
+    .nav-btn {
+        flex: 1 0 50%;
+        margin: 5px;
+    }
+}

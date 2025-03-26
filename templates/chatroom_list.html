@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatroom List</title>
+</head>
+<body>
+    <h1>Chatroom List</h1>
+    <ul>
+        {% for chatroom in chatrooms %}
+        <li><a href="{% url 'chatroom_detail' chatroom.id %}">{{ chatroom.name }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

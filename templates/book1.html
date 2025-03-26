@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ book.bookname }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="{% static 'css/books.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <span>目錄</span>
+                <button class="toggle-btn">&#9776;</button>
+            </div>
+            <div class="toc-list">
+                {% for chapter in chapters %}
+                <div class="toc-item">
+                    <a href="#chapter_{{ chapter.chapter_order }}">{{ chapter.title }}</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="content">
+            <div class="title">{{ book.bookname }}</div>
+            <p><strong>作者:</strong> {{ book.author }}</p>
+
+            
+            <div class="book-content">
+                {% for chapter in chapters %}
+                <div class="chapter-content content-section" data-chapter-id="{{ chapter.id }}">
+                    <h3>{{ chapter.title }}</h3>
+                    <p>{{ chapter.content|safe }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="navigation">
+        <div class="nav-btn prev-page">
+            <i class="fas fa-arrow-left"></i>
+            <span>上一章</span>
+        </div>
+        <div class="nav-btn home">
+            <i class="fas fa-home"></i>
+            <a href="/index" class="active">首頁</a>
+        </div>
+        <div class="nav-btn home">
+            <i class="fas fa-book"></i>
+            <a href="/book">返回書籍</a> 
+            
+        </div>
+        <div class="nav-btn next-page">
+            <i class="fas fa-arrow-right"></i>
+            <span>下一章</span>
+        </div>
+        <div class="navigation">
+            <div class="nav-btn font-size-btn">
+                <i class="fas fa-search-plus"></i>
+                <span>字體放大</span>
+            </div>
+            <div class="nav-btn font-size-btn">
+                <i class="fas fa-search-minus"></i>
+                <span>字體縮小</span>
+            </div>
+    </div>
+
+
+    <script>
+        const toggleBtn = document.querySelector('.toggle-btn');
+        const sidebar = document.querySelector('.sidebar');
+        const tocList = document.querySelector('.toc-list');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            if (sidebar.classList.contains('collapsed')) {
+                tocList.style.height = "0";
+            } else {
+                tocList.style.height = "auto";
+            }
+        });
+
+        const tocLinks = document.querySelectorAll('.toc-item a');
+        const contentSections = document.querySelectorAll('.content-section');
+        let currentSection = null;
+
+        tocLinks.forEach((link, index) => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const targetSection = contentSections[index];
+                const targetChapterId = targetSection.dataset.chapterId;
+
+                // 清空當前顯示的內容區塊
+                if (currentSection) {
+                    currentSection.innerHTML = '';
+                }
+
+                // 顯示新點擊的章節內容
+                targetSection.innerHTML = `
+                    <h3>${targetSection.querySelector('h3').textContent}</h3>
+                    <p>${targetSection.querySelector('p').textContent}</p>
+                `;
+                targetSection.scrollIntoView({behavior: 'smooth'});
+
+                // 更新當前顯示的內容區塊
+                currentSection = targetSection;
+            });
+        });
+
+        const fontSizeBtns = document.querySelectorAll('.font-size-btn');
+        const bookContent = document.querySelector('.book-content');
+        let fontSize = 16; // 初始字體大小
+
+        fontSizeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const isIncrease = btn.querySelector('i').classList.contains('fa-search-plus');
+                if (isIncrease) {
+                    fontSize += 2;
+                } else {
+                    fontSize -= 2;
+                }
+                bookContent.style.fontSize = `${fontSize}px`;
+            });
+        });
+        
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>命理gpt</title>
+    <link rel="stylesheet" href="{% static 'css/day.css' %}">
+<link 
+     rel="stylesheet"
+     href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    
+    </head>
+    
+    <body>
+        
+        <div class="sidebar">
+            <div class="logo"></div>
+            <ul class="menu">
+
+            <li>
+                <a href="/index">
+                    <ion-icon name="home-outline"></ion-icon>
+                    首頁
+                </a>
+            </li>
+
+            <li>
+                <a href="/year">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    流年運勢
+                </a>
+            </li>
+
+            <li>
+                <a href="/aichat2">
+                    <ion-icon name="cube-outline"></ion-icon>
+                    AI算命師
+                </a>
+            </li>
+
+
+            <li>
+                <a href="/day">
+                    <ion-icon name="today-outline"></ion-icon>
+                    每日運勢
+                </a>
+            </li>
+
+            <li>
+                <a href="/book">
+                    <ion-icon name="book-outline"></ion-icon>
+                    教育資源
+                </a>
+            </li>
+            <li>
+                <a href="/index/#about">
+                    <ion-icon name="globe-outline"></ion-icon>
+                    關於我們
+                </a>
+            </li>
+            <li>
+                <a href="/we">
+                    <ion-icon name="call-outline"></ion-icon>
+                    聯絡我們
+                </a>
+            </li>
+            {% if user.is_authenticated %}
+    <li>
+        <a href="/aboutme/"><ion-icon name="person-outline"></ion-icon>{{ user.get_username }}</a>
+    </li>
+{% endif %}
+
+            <li class="logout">
+                {% if user.is_authenticated %}
+           
+            <a href="/logout/"><ion-icon name="log-in-outline"></ion-icon>登出</a>
+            {% else %}
+            <a href="/login/"><ion-icon name="log-in-outline"></ion-icon>登入</a>
+        {% endif %}
+            </li>
+            </ul>
+        </div>
+       
+        <div class="main--content">
+            <div class="header--wrapper">
+                
+                <div class="header-title">
+                    
+                    <H2>命理GPT</H2>
+                </div>
+                
+                <form method="post" style="font-size: 1.2rem;"> 
+                    {% csrf_token %} 
+                    <label for="date" style="font-size: 1.2rem;">生日：</label> 
+                    <input id="date" name="birthday"  value="{{ birthday.birthday|date:'Y-m-d' }}" required style="font-size: 1.2rem;"> 
+                    <!---<input type="submit" style="font-size: 1.2rem;"> -->
+                </form>
+                
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // 获取日期输入框
+                        var dateInput = document.getElementById('date');
+                
+                        // 获取当前日期
+                        var currentDate = new Date().toISOString().split('T')[0];
+                
+                        // 设置日期输入框的最大值为当前日期
+                        dateInput.setAttribute('max', currentDate);
+                    });
+                </script>
+                
+                <img src="/static/images/aichat2/222.png" id="123">
+
+            </div>
+            <div class="card-container">
+                <marquee direction="right" height="50" scrollamount="5" behavior="alternate">
+                    <span style="color: red; font-size: 35px;">算命結果僅供參考，若有問題請尋求正規管道</span>
+                </marquee>
+                
+              <h3 class="main-title">每日運勢</h3>
+              <div class="card-row">
+                  <div class="card light-red" onclick="showHealthy('{{ generated_text }}')"></button>
+                      <div class="card-header">
+                          <div class="amount">
+                              <span class="card-text">健康</span>
+                              <p style="font-size: 1.2em;"id="outputH">{{generated_H}}</p>
+
+                          </div>
+                      </div>
+                  </div>
+          
+                  <div class="card light-green" onclick="showjob('{{ generated_text }}')"></button>
+                      <div class="card-header">
+                          <div class="amount">
+                              <span class="card-text">工作 </span>
+                              <p style="font-size: 1.2em;"id="outputW">{{generated_W}}</p>
+
+
+                            
+                          </div>
+                      </div>
+                  </div>
+          
+                  <div class="card light-blue" onclick="showmoney('{{ generated_text }}')"></button>
+                      <div class="card-header">
+                          <div class="amount">
+                              <span class="card-text">財運</span>
+                              <p style="font-size: 1.2em;"id="outputM">{{generated_M}}</p>
+                          </div>
+                      </div>
+                  </div>
+
+
+                  <div class="card light-purple" onclick="showlove('{{ generated_text }}')"></button>
+                    <div class="card-header">
+                        <div class="amount">
+                            <span class="card-text">愛情</span>
+                            <p style="font-size: 1.2em;"id="outputL">{{generated_L}}</p>
+                        </div>
+                    </div>
+                </div>
+              </div>
+          </div>
+          
+
+        <script>
+            // 定义一个函数来处理每个流
+            function fetchAndDisplay(url, outputElementId) {
+                fetch(url)
+                .then(response => {
+                    const reader = response.body.getReader();
+                    const stream = new ReadableStream({
+                        start(controller) {
+                            function push() {
+                                reader.read().then(({ done, value }) => {
+                                    if (done) {
+                                        controller.close();
+                                        return;
+                                    }
+                                    document.getElementById(outputElementId).innerText += new TextDecoder().decode(value);
+                                    push();
+                                });
+                            }
+                            push();
+                        }
+                    });
+                    return new Response(stream);
+                })
+                .catch(error => console.error('Error:', error));
+            }
+    
+            // 分别调用函数来处理每个流
+            fetchAndDisplay('/day12/?prompt=H', 'outputH');
+            fetchAndDisplay('/day12/?prompt=M', 'outputM');
+            fetchAndDisplay('/day12/?prompt=L', 'outputL');
+            fetchAndDisplay('/day12/?prompt=W', 'outputW');
+        </script>   
+         
+
+                
+
+        <script src="{% static 'js/aichat2.js'%}"></script>
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+                  
+                <!-- <script src="{% static 'js/day.js' %}"></script> --> 
+                  
+                </body>
+                </html>
