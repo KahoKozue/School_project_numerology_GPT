@@ -5,7 +5,7 @@ from openai import OpenAI
 def GPT_response(text):
     client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
     response = client.chat.completions.create(
-        model="ft:gpt-3.5-turbo-1106:kitaikuyokitaaan:newbook:9PBxNCgr:ckpt-step-264",
+        model=os.getenv("OPENAI_FINETUNED_MODEL", "gpt-3.5-turbo"),
         messages=[
             {"role": "system", "content": "這是一個基於四柱八字的聊天機器人，旨在提供洞察力強的讀數與事實信息相結合。"},
             {"role": "user", "content": text}

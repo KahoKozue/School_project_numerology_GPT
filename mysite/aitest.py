@@ -11,7 +11,7 @@ def myAssist2(prompt, history):
   messages.append({'role':'user', 'content':prompt})
   client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
   response = client.chat.completions.create(
-      model = 'ft:gpt-3.5-turbo-1106:kitaikuyokitaaan:newbook:9PBxNCgr:ckpt-step-264',
+      model=os.getenv("OPENAI_FINETUNED_MODEL", "gpt-3.5-turbo"),
       messages = messages
   )
   reply = response.choices[0].message.content

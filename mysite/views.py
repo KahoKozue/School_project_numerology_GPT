@@ -124,7 +124,7 @@ def yearfinal(request):
 def GPTyear(text):
     client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
     response = client.chat.completions.create(
-        model="ft:gpt-3.5-turbo-1106:kitaikuyokitaaan:0429explain3:9JESHblh",
+        model=os.getenv("OPENAI_FINETUNED_MODEL", "gpt-3.5-turbo"),
         messages=[
             {"role": "system", "content": "這是一個基於四柱八字的聊天機器人，旨在提供洞察力強的讀數與事實信息相結合，不要說到生肖，請用繁體中文回答。"},
             {"role": "user", "content": text}
@@ -262,7 +262,7 @@ def day12(request):
     def GPTday(prompt):
         client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
         stream = client.chat.completions.create(
-            model="ft:gpt-3.5-turbo-1106:kitaikuyokitaaan:0429explain3:9JESHblh",
+            model=os.getenv("OPENAI_FINETUNED_MODEL", "gpt-3.5-turbo"),
             messages=[
                 {"role": "system", "content": "這是一個基於四柱八字的聊天機器人，旨在提供洞察力強的讀數與事實信息相結合，請用繁體中文回答。"},
                 {"role": "user", "content": prompt}
