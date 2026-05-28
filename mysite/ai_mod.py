@@ -1,8 +1,9 @@
+import os
 from openai import OpenAI
 
 
 def GPT_response(text):
-    client = OpenAI(api_key='REMOVED_OPENAI_KEY')
+    client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
     response = client.chat.completions.create(
         model="ft:gpt-3.5-turbo-1106:kitaikuyokitaaan:newbook:9PBxNCgr:ckpt-step-264",
         messages=[
@@ -24,7 +25,7 @@ def GPT_response(text):
 #-----------------------------------------------------------------------------------------------------------
 
 def GPT3_5_response(text):
-    client = OpenAI(api_key='REMOVED_OPENAI_KEY')
+    client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -43,7 +44,7 @@ def GPT3_5_response(text):
 
 
 def GPT_response4o(text):
-    client = OpenAI(api_key='REMOVED_OPENAI_KEY')
+    client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
     response = client.chat.completions.create(
         model="gpt-4o",
         messages=[

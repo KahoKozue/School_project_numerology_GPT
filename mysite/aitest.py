@@ -1,3 +1,4 @@
+import os
 from openai import OpenAI
 import gradio as gr
 
@@ -8,7 +9,7 @@ def myAssist2(prompt, history):
   global messages
 
   messages.append({'role':'user', 'content':prompt})
-  client = OpenAI(api_key='REMOVED_OPENAI_KEY')
+  client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
   response = client.chat.completions.create(
       model = 'ft:gpt-3.5-turbo-1106:kitaikuyokitaaan:newbook:9PBxNCgr:ckpt-step-264',
       messages = messages

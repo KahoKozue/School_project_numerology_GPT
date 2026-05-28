@@ -1,3 +1,4 @@
+import os
 import json
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -121,7 +122,7 @@ def yearfinal(request):
     return render(request, 'yearfinal.html')
 
 def GPTyear(text):
-    client = OpenAI(api_key='REMOVED_OPENAI_KEY')
+    client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
     response = client.chat.completions.create(
         model="ft:gpt-3.5-turbo-1106:kitaikuyokitaaan:0429explain3:9JESHblh",
         messages=[
@@ -259,7 +260,7 @@ def day12(request):
 
     
     def GPTday(prompt):
-        client = OpenAI(api_key='REMOVED_OPENAI_KEY')
+        client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
         stream = client.chat.completions.create(
             model="ft:gpt-3.5-turbo-1106:kitaikuyokitaaan:0429explain3:9JESHblh",
             messages=[
@@ -496,7 +497,7 @@ def send_message(request):
             #print(read_text )
             # 使用生成器函數生成流式回覆
             def chat_stream(prompt, user, chatroom):
-                client = OpenAI(api_key='REMOVED_OPENAI_KEY')
+                client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
                 stream = client.chat.completions.create(
                     model="gpt-3.5-turbo",
                     messages=[
